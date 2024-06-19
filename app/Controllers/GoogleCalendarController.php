@@ -74,6 +74,21 @@ class GoogleCalendarController extends Controller
         header('Location: /calendar');
     }
 
+    public function deleteEvent($eventId)
+    {
+        if (!isset($_SESSION['access_token'])) {
+            header('Location: /connect');
+            exit;
+        }
+
+        $this->client->setAccessToken($_SESSION['access_token']);
+        $service = new Google_Service_Calendar($this->client);
+
+        $calendarId = 'primary';
+        $service->events->delete($calendarId, $eventId);
+        header('Location: /calendar');
+    }
+
     public function disconnect()
     {
         unset($_SESSION['access_token']);
