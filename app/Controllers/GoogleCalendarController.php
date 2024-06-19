@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use Google_Client;
 use Google_Service_Calendar;
+use Google_Service_Calendar_Event;
 
 class GoogleCalendarController extends Controller
 {
@@ -51,5 +52,31 @@ class GoogleCalendarController extends Controller
         $eventsArray = $events->getItems();
 
         $this->view('calendar/list', ['events' => $eventsArray]);
+    }
+    public function createEvent()
+    {
+        if (!isset($_SESSION['access_token'])) {
+            header('Location: /connect');
+            exit;
+        }
+
+        $this->client->setAccessToken($_SESSION['access_token']);
+        $service = new Google_Service_Calendar($this->client);
+
+        $event = new Google_Service_Calendar_Event([
+            'summary' => 'New Event',
+            'start' => ['dateTime' => '2024-06-20T09:00:00-07:00'],
+            'end' => ['dateTime' => '2024-06-20T10:00:00-07:00']
+        ]);
+
+        $calendarId = 'primary';
+        $event = $service->events->insert($calendarId, $event);
+        header('Location: /calendar');
+    }
+
+    public function disconnect()
+    {
+        unset($_SESSION['access_token']);
+        header('Location: /');
     }
 }

@@ -6,6 +6,8 @@
 <body>
 <h1>Google Calendar Events</h1>
 <button onclick="location.href='/connect'">Connect to Google Calendar</button>
+<button onclick="location.href='/disconnect'">Disconnect</button>
+<button onclick="location.href='/calendar/create'">Create Event</button>
 
 
 <?php if (!empty($events)): ?>
