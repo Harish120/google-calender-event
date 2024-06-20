@@ -21,7 +21,33 @@
                     <?php foreach ($upcomingEvents as $event): ?>
                         <div class="list-group-item">
                             <h5 class="mb-1"><?= $event->getSummary() ?></h5>
-                            <small><?= $event->getStart()->getDateTime() ?></small>
+                            <?php
+                                $startDateTime = $event->getStart()->getDateTime();
+                                if ($startDateTime) {
+                                    // Convert to DateTime object
+                                    $start = new DateTime($startDateTime);
+
+                                    // Set the timezone to Asia/Kathmandu
+                                    $start->setTimezone(new DateTimeZone('Asia/Kathmandu'));
+
+                                    // Format the date/time in the desired format
+                                    $startDateTime = $start->format('Y-m-d H:i:s'); // Adjust format as per your requirement
+                                }
+
+                                $endDateTime = $event->getEnd()->getDateTime();
+                                if ($endDateTime) {
+                                    // Convert to DateTime object
+                                    $end = new DateTime($endDateTime);
+
+                                    // Set the timezone to Asia/Kathmandu
+                                    $end->setTimezone(new DateTimeZone('Asia/Kathmandu'));
+
+                                    // Format the date/time in the desired format
+                                    $endDateTime = $end->format('Y-m-d H:i:s'); // Adjust format as per your requirement
+                                }
+                            ?>
+                            <small>Start: <?= $startDateTime ?></small>
+                            <small> | End: <?= $endDateTime ?></small>
                             <form action="/calendar/delete/<?= $event->getId() ?>" method="post" class="float-right">
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>

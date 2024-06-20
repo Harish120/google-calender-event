@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use DateTime;
+use DateTimeZone;
 use Exception;
 use Google_Client;
 use Google_Service_Calendar;
@@ -57,6 +59,7 @@ class GoogleCalendarController extends Controller
             'orderBy' => 'startTime',
             'singleEvents' => true,
             'timeMin' => date('c'),
+            'timeZone' => 'GMT'
         ];
         $upcomingEvents = $service->events->listEvents($calendarId, $optParamsUpcoming)->getItems();
 
@@ -67,6 +70,7 @@ class GoogleCalendarController extends Controller
             'singleEvents' => true,
             'timeMax' => date('c', strtotime('-1 day')), // Today
             'timeMin' => date('c', strtotime('-2 years')), // 2 years ago
+            'timeZone' => 'GMT'
         ];
         $archivedEvents = $service->events->listEvents($calendarId, $optParamsArchived)->getItems();
 
@@ -92,33 +96,36 @@ class GoogleCalendarController extends Controller
         $service = new Google_Service_Calendar($this->client);
 
         try {
-            // Ensure the date and time are in the correct format
-            $startDateTime = date('c', strtotime($_POST['start']));
-            $endDateTime = date('c', strtotime($_POST['end']));
+            // Create DateTime objects with Asia/Kathmandu timezone
+            $startDateTime = new DateTime($_POST['start'], new DateTimeZone('Asia/Kathmandu'));
+            $endDateTime = new DateTime($_POST['end'], new DateTimeZone('Asia/Kathmandu'));
+
+            // Format dates in RFC3339 format
+            $startDateTimeFormatted = $startDateTime->format('Y-m-d\TH:i:sP');
+            $endDateTimeFormatted = $endDateTime->format('Y-m-d\TH:i:sP');
 
             // Create the event
             $event = new Google_Service_Calendar_Event([
                 'summary' => $_POST['summary'],
-                'start' => ['dateTime' => $startDateTime],
-                'end' => ['dateTime' => $endDateTime],
+                'start' => ['dateTime' => $startDateTimeFormatted],
+                'end' => ['dateTime' => $endDateTimeFormatted],
             ]);
 
             $calendarId = 'primary';
             $event = $service->events->insert($calendarId, $event);
 
-            // Debug print to ensure the event is created
-
-            // Redirect to the calendar view
+            // Redirect to the calendar view after event creation
             header('Location: /calendar');
         } catch (Google_Service_Exception $e) {
-            // Print detailed error for debugging
+            // Handle Google service exception
             echo 'Caught Google Service Exception: ',  $e->getMessage(), "\n";
-            echo 'Response Body: ', $e->getErrors(), "\n";
+            echo 'Response Body: ', json_encode($e->getErrors()), "\n";
         } catch (Exception $e) {
-            // Catch any other errors
+            // Catch any other exceptions
             echo 'Caught General Exception: ', $e->getMessage(), "\n";
         }
     }
+
 
     public function deleteEvent($eventId)
     {
