@@ -3,9 +3,11 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use Exception;
 use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
+use Google_Service_Exception;
 
 class GoogleCalendarController extends Controller
 {
