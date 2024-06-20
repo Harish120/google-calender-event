@@ -18,6 +18,17 @@
                 <a class="nav-link" href="/calendar">Events</a>
             </li>
         </ul>
+        <ul class="navbar-nav">
+            <?php if (isset($_SESSION['access_token'])): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/disconnect">Disconnect</a>
+                </li>
+            <?php else: ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/connect">Connect</a>
+                </li>
+            <?php endif; ?>
+        </ul>
     </div>
 </nav>
 

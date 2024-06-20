@@ -50,10 +50,30 @@ class GoogleCalendarController extends Controller
         $service = new Google_Service_Calendar($this->client);
 
         $calendarId = 'primary';
-        $events = $service->events->listEvents($calendarId);
-        $eventsArray = $events->getItems();
 
-        $this->view('calendar/list', ['events' => $eventsArray]);
+        // Fetching upcoming events
+        $optParamsUpcoming = [
+            'maxResults' => 100,
+            'orderBy' => 'startTime',
+            'singleEvents' => true,
+            'timeMin' => date('c'),
+        ];
+        $upcomingEvents = $service->events->listEvents($calendarId, $optParamsUpcoming)->getItems();
+
+        // Fetching archived events (older than current date up to 2 years)
+        $optParamsArchived = [
+            'maxResults' => 100,
+            'orderBy' => 'startTime',
+            'singleEvents' => true,
+            'timeMax' => date('c', strtotime('-1 day')), // Today
+            'timeMin' => date('c', strtotime('-2 years')), // 2 years ago
+        ];
+        $archivedEvents = $service->events->listEvents($calendarId, $optParamsArchived)->getItems();
+
+        $this->view('calendar/list', [
+            'upcomingEvents' => $upcomingEvents,
+            'archivedEvents' => $archivedEvents
+        ]);
     }
 
     public function showEventForm()
