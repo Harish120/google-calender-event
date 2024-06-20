@@ -120,13 +120,4 @@ class GoogleCalendarController extends Controller
         unset($_SESSION['access_token']);
         header('Location: /');
     }
-
-    protected function view($view, $data = [])
-    {
-        extract($data);
-        $viewPath = __DIR__ . "/../Views/$view.php";
-        $layoutPath = __DIR__ . "/../Views/layouts/main.php";
-        $view = $viewPath;
-        include($layoutPath);
-    }
 }

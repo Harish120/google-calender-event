@@ -7,7 +7,10 @@ class Controller
     protected function view($view, $data = [])
     {
         extract($data);
-        require_once __DIR__ . '/../Views/' . $view . '.php';
+        $viewPath = __DIR__ . "/../Views/$view.php";
+        $layoutPath = __DIR__ . "/../Views/layouts/main.php";
+        $view = $viewPath;
+        include($layoutPath);
     }
 
     protected function model($model)
