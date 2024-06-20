@@ -16,17 +16,22 @@ class Router
         $this->routes['POST'][$path] = $callback;
     }
 
-    public function dispatch($uri)
+    public function dispatch($uri, $requestMethod)
     {
         $uri = parse_url($uri, PHP_URL_PATH);
+        $method = strtoupper($requestMethod);
 
-        foreach ($this->routes[$_SERVER['REQUEST_METHOD']] as $path => $callback) {
-            $pathPattern = preg_replace('/\{([a-z]+)\}/', '([a-zA-Z0-9_\-]+)', $path);
-            if (preg_match("#^$pathPattern$#", $uri, $matches)) {
+        foreach ($this->routes[$method] as $route => $callback) {
+            $routePattern = preg_replace('/\{[a-zA-Z0-9_]+\}/', '([a-zA-Z0-9_]+)', $route);
+            if (preg_match('#^' . $routePattern . '$#', $uri, $matches)) {
                 array_shift($matches);
-                list($controller, $method) = explode('@', $callback);
-                $controller = "App\\Controllers\\$controller";
-                call_user_func_array([new $controller, $method], $matches);
+                if (is_callable($callback)) {
+                    call_user_func_array($callback, $matches);
+                } else {
+                    list($controller, $method) = explode('@', $callback);
+                    $controller = "App\\Controllers\\$controller";
+                    call_user_func_array([new $controller, $method], $matches);
+                }
                 return;
             }
         }
