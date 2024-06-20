@@ -53,6 +53,12 @@ class GoogleCalendarController extends Controller
 
         $this->view('calendar/list', ['events' => $eventsArray]);
     }
+
+    public function showEventForm()
+    {
+        $this->view('calendar/create');
+    }
+
     public function createEvent()
     {
         if (!isset($_SESSION['access_token'])) {
@@ -63,15 +69,33 @@ class GoogleCalendarController extends Controller
         $this->client->setAccessToken($_SESSION['access_token']);
         $service = new Google_Service_Calendar($this->client);
 
-        $event = new Google_Service_Calendar_Event([
-            'summary' => 'New Event',
-            'start' => ['dateTime' => '2024-06-20T09:00:00-07:00'],
-            'end' => ['dateTime' => '2024-06-20T10:00:00-07:00']
-        ]);
+        try {
+            // Ensure the date and time are in the correct format
+            $startDateTime = date('c', strtotime($_POST['start']));
+            $endDateTime = date('c', strtotime($_POST['end']));
 
-        $calendarId = 'primary';
-        $event = $service->events->insert($calendarId, $event);
-        header('Location: /calendar');
+            // Create the event
+            $event = new Google_Service_Calendar_Event([
+                'summary' => $_POST['summary'],
+                'start' => ['dateTime' => $startDateTime],
+                'end' => ['dateTime' => $endDateTime],
+            ]);
+
+            $calendarId = 'primary';
+            $event = $service->events->insert($calendarId, $event);
+
+            // Debug print to ensure the event is created
+
+            // Redirect to the calendar view
+            header('Location: /calendar');
+        } catch (Google_Service_Exception $e) {
+            // Print detailed error for debugging
+            echo 'Caught Google Service Exception: ',  $e->getMessage(), "\n";
+            echo 'Response Body: ', $e->getErrors(), "\n";
+        } catch (Exception $e) {
+            // Catch any other errors
+            echo 'Caught General Exception: ', $e->getMessage(), "\n";
+        }
     }
 
     public function deleteEvent($eventId)
@@ -93,5 +117,14 @@ class GoogleCalendarController extends Controller
     {
         unset($_SESSION['access_token']);
         header('Location: /');
+    }
+
+    protected function view($view, $data = [])
+    {
+        extract($data);
+        $viewPath = __DIR__ . "/../Views/$view.php";
+        $layoutPath = __DIR__ . "/../Views/layouts/main.php";
+        $view = $viewPath;
+        include($layoutPath);
     }
 }
