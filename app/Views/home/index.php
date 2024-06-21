@@ -7,7 +7,7 @@
                 </div>
                 <div class="card-body">
                     <p class="lead">Connect and manage your Google Calendar events seamlessly.</p>
-                    <a href="/calendar" class="btn btn-primary btn-lg">List Events</a>
+                    <a href="/connect" class="btn btn-primary btn-lg">Connect</a>
                 </div>
                 <div class="card-footer text-muted">
                     Powered by Intuji
