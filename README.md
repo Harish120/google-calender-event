@@ -34,7 +34,7 @@ Before running the project, make sure you have the following installed:
 
 3. **Configure environment variables**
 
-    - Copy \`.env.example\` to \`.env\` and set your environment variables, including \`GOOGLE_CLIENT_ID\` and \`GOOGLE_CLIENT_SECRET\`.
+    - Copy \`.env.example\` to \`.env\` and set your environment variables.
 
 4. **Run the application**
 
