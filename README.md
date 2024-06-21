@@ -32,11 +32,11 @@ Before running the project, make sure you have the following installed:
 
    composer install
 
-3**Configure environment variables**
+3. **Configure environment variables**
 
     - Copy \`.env.example\` to \`.env\` and set your environment variables, including \`GOOGLE_CLIENT_ID\` and \`GOOGLE_CLIENT_SECRET\`.
 
-4**Run the application**
+4. **Run the application**
 
     - Start the PHP development server:
 
