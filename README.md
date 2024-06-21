@@ -1,5 +1,5 @@
 
-# Google Calendar Integration with PHP MVC
+# Google Calendar Integration with PHP
 
 This project demonstrates integrating Google Calendar API into a PHP application using MVC (Model-View-Controller) pattern.
 
@@ -18,7 +18,6 @@ Before running the project, make sure you have the following installed:
 - PHP (version >= 7.0)
 - Composer (for installing dependencies)
 - Web server (Apache, Nginx, etc.)
-- Google API credentials (OAuth client ID and secret)
 
 ## Installation
 
@@ -33,17 +32,11 @@ Before running the project, make sure you have the following installed:
 
    composer install
 
-3. **Set up Google API credentials**
-
-    - Create a project in Google Cloud Console: [Google Cloud Console](https://console.cloud.google.com/)
-    - Enable Google Calendar API and create OAuth client credentials (OAuth client ID and secret)
-    - Download \`credentials.json\` and place it in the root directory of the project.
-
-4. **Configure environment variables**
+3**Configure environment variables**
 
     - Copy \`.env.example\` to \`.env\` and set your environment variables, including \`GOOGLE_CLIENT_ID\` and \`GOOGLE_CLIENT_SECRET\`.
 
-5. **Run the application**
+4**Run the application**
 
     - Start the PHP development server:
 
@@ -54,13 +47,13 @@ Before running the project, make sure you have the following installed:
 ## Usage
 
 - **Connecting to Google Calendar:**
-    - Navigate to \`/connect\` to authorize the application to access your Google Calendar.
+    - Navigate to \`/List Events\` to authorize the application to access your Google Calendar.
 
 - **Listing Events:**
-    - After connecting, visit \`/calendar\` to view events. Events are categorized into Upcoming and Archived (older than 2 years).
+    - After connecting, visit \`/calendar\` to view events. Events are categorized into Upcoming and Archived (older upto 2 years).
 
 - **Creating Events:**
-    - Use the "Create Event" button on the homepage (\`/\`) to add new events to your Google Calendar.
+    - Use the "Create Event" button on the event list page (\`/\`) to add new events to your Google Calendar.
 
 - **Deleting Events:**
     - Events can be deleted from the \`/calendar\` view by clicking on the delete button next to each event.
